@@ -26,7 +26,7 @@ ref.: https://mongoosejs.com/docs/6.x/docs/migrating_to_6.html
 /* local connection */
 // mongoose.connect('mongodb://localhost:27017/flicktionary');
 /* atlas connection */
-mongoose.connect(process.env.CONNECTION_URI);
+mongoose.connect('mongodb+srv://myFlixDB:12345@cluster0.lzyp5of.mongodb.net/myFlixDB?retryWrites=true&w=majority&appName=Cluster0', { useNewUrlParser: true, useUnifiedTopology: true });
 
 // log all requests to log.txt
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {
