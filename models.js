@@ -1,64 +1,41 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
-// Movie Schema
-const movieSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  genre: {
-    name: { type: String, required: true },
-    description: { type: String, required: true }
+let movieSchema = mongoose.Schema({
+  Title: {type: String, required: true},
+  Description: {type: String, required: true},
+  Genre: {
+    Name: String,
+    Description: String
   },
-  director: {
-    name: { type: String, required: true },
-    bio: { type: String, required: true },
-    birthYear: { type: Number, required: true },
-    deathYear: { type: Number, default: null }
+  Director: {
+    Name: String,
+    Bio: String
   },
-  imageUrl: { type: String, required: true },
-  featured: { type: Boolean, required: true }
+  Actors: [String],
+  ImagePath: String,
+  Featured: Boolean
 });
 
-// User Schema
-const userSchema = new mongoose.Schema({
-  username: { type: String, required: true },
-  password: { type: String, required: true },
-  email: { type: String, required: true },
-  dateOfBirth: { type: Date, required: true },
-  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }]
+let userSchema = mongoose.Schema({
+  Username: {type: String, required: true},
+  Password: {type: String, required: true},
+  Email: {type: String, required: true},
+  Birthday: Date,
+  FavoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }]
 });
 
-// Password hashing and validation
+// hash password
 userSchema.statics.hashPassword = (password) => {
   return bcrypt.hashSync(password, 10);
 };
 
 userSchema.methods.validatePassword = function(password) {
-  return bcrypt.compareSync(password, this.password);  // Fixed this line: 'this.password'
+  return bcrypt.compareSync(password, this.Password);
 };
 
-// Create the models
-const Movie = mongoose.model('Movie', movieSchema);
-const User = mongoose.model('User', userSchema);
+let Movie = mongoose.model('Movie', movieSchema);
+let User = mongoose.model('User', userSchema);
 
 module.exports.Movie = Movie;
 module.exports.User = User;
-
-// Database connection
-const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/flicktionary', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,  // Disable findAndModify deprecation warning
-      useCreateIndex: true,     // Disable createIndex deprecation warning
-    });
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
-    process.exit(1); // Exit the process if connection fails
-  }
-};
-
-// Call connectDB to establish connection
-connectDB();
