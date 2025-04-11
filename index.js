@@ -27,7 +27,7 @@ ref.: https://mongoosejs.com/docs/6.x/docs/migrating_to_6.html
 // mongoose.connect('mongodb://localhost:27017/myFlixDB');
 //mongoose.connect('mongodb+srv://kay:12345@myflixdb-jvame.mongodb.net/myFlixDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
 /* atlas connection */
-mongoose.connect(process.env.CONNECTION_URI);
+mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 // log all requests to log.txt
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {
