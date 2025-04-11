@@ -16,7 +16,7 @@ const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
 
-// mongoose.connect('mongodb://localhost:27017/flicktionary', { useNewUrlParser: true, useUnifiedTopology: true });
+// mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
 /*
 useNewUrlParser, useUnifiedTopology, useFindAndModify, and useCreateIndex are no longer supported options. Mongoose 6 always behaves as if useNewUrlParser, useUnifiedTopology, and useCreateIndex are true, and useFindAndModify is false. Please remove these options from your code.
 
@@ -24,9 +24,9 @@ ref.: https://mongoosejs.com/docs/6.x/docs/migrating_to_6.html
 
 */
 /* local connection */
-// mongoose.connect('mongodb://localhost:27017/flicktionary');
+// mongoose.connect('mongodb://localhost:27017/myFlixDB');
 /* atlas connection */
-mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.CONNECTION_URI);
 
 // log all requests to log.txt
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {
@@ -48,13 +48,13 @@ app.use(express.urlencoded({ extended: true }));
 // CORS
 const cors = require('cors');
 let allowedOrigins = ['http://localhost:8080', 'https://flicktionary.onrender.com', 'http://localhost:1234'];
-app.use(cors());
-// app.use(cors({
-//   origin: '*', // Allow all origins
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Specify allowed methods
-//   allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
-//   maxAge: 86400 // Cache preflight requests for 24 hours
-// }));
+
+app.use(cors({
+  origin: '*', // Allow all origins
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Specify allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
+  maxAge: 86400 // Cache preflight requests for 24 hours
+}));
 
 // Add security headers
 app.use((req, res, next) => {
@@ -90,7 +90,7 @@ app.get('/', (req, res) => {
 // Movies endpoints
 
 // Return a list of ALL movies to the user
-app.get('/movies', async (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false}), async (req, res) => {
   try {
     const movies = await Movies.find();
     if (!movies || movies.length === 0) {

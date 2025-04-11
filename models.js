@@ -28,16 +28,37 @@ const userSchema = new mongoose.Schema({
   favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }]
 });
 
+// Password hashing and validation
 userSchema.statics.hashPassword = (password) => {
   return bcrypt.hashSync(password, 10);
 };
 
 userSchema.methods.validatePassword = function(password) {
-  return bcrypt.compareSync(password, this.Password);
+  return bcrypt.compareSync(password, this.password);  // Fixed this line: 'this.password'
 };
 
+// Create the models
 const Movie = mongoose.model('Movie', movieSchema);
 const User = mongoose.model('User', userSchema);
 
 module.exports.Movie = Movie;
 module.exports.User = User;
+
+// Database connection
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/flicktionary', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,  // Disable findAndModify deprecation warning
+      useCreateIndex: true,     // Disable createIndex deprecation warning
+    });
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+    process.exit(1); // Exit the process if connection fails
+  }
+};
+
+// Call connectDB to establish connection
+connectDB();
