@@ -27,7 +27,8 @@ ref.: https://mongoosejs.com/docs/6.x/docs/migrating_to_6.html
 // mongoose.connect('mongodb://localhost:27017/myFlixDB');
 //mongoose.connect('mongodb+srv://kay:12345@myflixdb-jvame.mongodb.net/myFlixDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
 /* atlas connection */
-mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.CONNECTION_URI);
+
 
 // log all requests to log.txt
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {
@@ -85,7 +86,7 @@ app.get('/', (req, res) => {
   // const title = '<h1>F L I C K T I O N A R Y</h1>';
   // const description = '<h2>A dictionary, but only for flicks.</h2>';
   // res.send(title + description);
-  res.sendFile('public/index.html', { root: __dirname });
+  res.send('Welcome to Flicktionary API!');
 });
 
 // Movies endpoints
