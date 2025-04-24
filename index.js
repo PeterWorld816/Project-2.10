@@ -24,10 +24,10 @@ ref.: https://mongoosejs.com/docs/6.x/docs/migrating_to_6.html
 
 */
 /* local connection */
-mongoose.connect('mongodb://localhost:27017/myFlixDB');
+//mongoose.connect('mongodb://localhost:27017/myFlixDB');
 //mongoose.connect('mongodb+srv://kay:12345@myflixdb-jvame.mongodb.net/myFlixDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
 /* atlas connection */
-//mongoose.connect(process.env.CONNECTION_URI);
+mongoose.connect(process.env.CONNECTION_URI);
 
 
 // log all requests to log.txt
