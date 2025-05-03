@@ -92,7 +92,8 @@ app.get('/', (req, res) => {
 // Movies endpoints
 
 // Return a list of ALL movies to the user
-app.get('/movies', passport.authenticate('jwt', { session: false}), async (req, res) => {
+//app.get('/movies', passport.authenticate('jwt', { session: false}), async (req, res) => {
+app.get('/movies', async (req, res) => {
   try {
     const movies = await Movies.find();
     if (!movies || movies.length === 0) {
